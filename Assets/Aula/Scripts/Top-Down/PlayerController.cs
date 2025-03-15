@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,14 +13,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioSource attackSound;
     [SerializeField] AudioSource stepSound;
 
+    [Header("Magic Settings")]
     [SerializeField] GameObject fireballPrefab;
     [SerializeField] Transform firePoint;
+    [SerializeField] float maxMp;
+    float currentMp;
+    [SerializeField] Image mpBar;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        currentMp = maxMp;
     }
 
     // Update is called once per frame
@@ -75,9 +81,9 @@ public class PlayerController : MonoBehaviour
 
     void Magic()
     {
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2") && currentMp > 30)
         {
-            //animator.SetTrigger("Magic");
+            animator.SetTrigger("Magic");
 
             // Instancia a Fireball no FirePoint
             GameObject fireball = Instantiate(fireballPrefab, firePoint.position, Quaternion.identity);
@@ -91,6 +97,14 @@ public class PlayerController : MonoBehaviour
            
             fireball.GetComponent<Fireball>().Shoot(direction, firePoint.position);
 
+            currentMp -= 30;
+            UpdateMpUI();
+            
         }
+    }
+
+    void UpdateMpUI()
+    {
+        mpBar.fillAmount = currentMp/maxMp;
     }
 }

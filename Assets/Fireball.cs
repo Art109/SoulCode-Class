@@ -21,8 +21,6 @@ public class Fireball : MonoBehaviour
     {
         transform.position = position;
         rb.velocity = direction.normalized * speed;
-        if (rb != null)
-            Debug.Log("ta certo o rb");
     }
 
     IEnumerator Finish()

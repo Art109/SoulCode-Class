@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     public float speed;
     int proximoPonto = 0;
 
+    [SerializeField] GameObject torch;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,5 +41,22 @@ public class Enemy : MonoBehaviour
                 proximoPonto = (proximoPonto + 1) % wayPoints.Count;
             }
         }
+
+        if (DayCycle.Instance.DayState == DayState.Night)
+        {
+            if (!torch.activeInHierarchy)
+            {
+                torch.SetActive(true);
+            }
+        }
+        else 
+        {
+            if (torch.activeInHierarchy)
+            {
+                torch.SetActive(false);
+            }
+        }
     }
+
+    
 }

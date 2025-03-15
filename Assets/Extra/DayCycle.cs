@@ -48,16 +48,6 @@ public class DayCycle : MonoBehaviour
         if (dayTime > dayLength)
             dayTime = 0;
 
-        float cyclePercent = dayTime / dayLength;
-
-        if (cyclePercent < 0.33f)
-            dayState = DayState.Morning;
-        else if (cyclePercent < 0.66f)
-            dayState = DayState.Afternoon;
-        else
-            dayState = DayState.Night;
-
-
     }
 
     void LightOscilation()
@@ -66,5 +56,16 @@ public class DayCycle : MonoBehaviour
         float lightFactor = (Mathf.Cos(t) + 1) / 2;
 
         dayLight.color = Color.Lerp(dayColorOffSetDark, dayColorOffSetBright, lightFactor);
+
+
+        // Ajustar os estados do dia para coincidir com a luz
+        if (lightFactor > 0.6f) // Iluminação forte -> manhã
+            dayState = DayState.Morning;
+        else if (lightFactor > 0.3f) // Iluminação média -> tarde
+            dayState = DayState.Afternoon;
+        else // Iluminação baixa -> noite
+            dayState = DayState.Night;
+
+        Debug.Log(dayState);
     }
 }
