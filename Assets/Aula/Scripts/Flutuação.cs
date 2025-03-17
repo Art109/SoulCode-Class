@@ -11,6 +11,8 @@ public class Flutuação : MonoBehaviour
     public float speed;
     public float alturaSalto;
 
+    bool lookingRight = true;
+
     Vector3 direction;
     float tempo = 0f;
     // Start is called before the first frame update
@@ -30,13 +32,23 @@ public class Flutuação : MonoBehaviour
 
         tempo += Time.deltaTime * 2f;
 
-        if (Vector2.Distance(transform.position, pontoB.position) < 1f)
+        if (Vector2.Distance(transform.position, pontoB.position) < 0.5f)
         {
             direction = (pontoA.position - pontoB.position).normalized;
+            Flip();
         }
-        else if (Vector2.Distance(transform.position, pontoA.position) < 1f)
+        else if (Vector2.Distance(transform.position, pontoA.position) < 0.5f)
         {
             direction = (pontoB.position - pontoA.position).normalized;
+            Flip();
         }
+    }
+
+    void Flip()
+    {
+        lookingRight = !lookingRight;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
@@ -23,8 +23,7 @@ public class DayCycle : MonoBehaviour
 
     [Header("Day Light Settings")]
     [SerializeField]Light2D dayLight;
-    [SerializeField]Color dayColorOffSetBright;
-    [SerializeField]Color dayColorOffSetDark;
+    [SerializeField] Gradient dayGradient;
 
     // Start is called before the first frame update
     void Start()
@@ -48,24 +47,31 @@ public class DayCycle : MonoBehaviour
         if (dayTime > dayLength)
             dayTime = 0;
 
+        float cyclePercent = dayTime / dayLength; // Progresso do dia (0 a 1)
+
+       
+        if (cyclePercent < 0.25f) // 0% - 25% ‚Üí Noite
+            dayState = DayState.Night;
+        else if (cyclePercent < 0.50f) // 25% - 50% ‚Üí Manh√£
+            dayState = DayState.Morning;
+        else if (cyclePercent < 0.75f) // 50% - 75% ‚Üí Tarde
+            dayState = DayState.Afternoon;
+        else // 75% - 100% ‚Üí Noite novamente
+            dayState = DayState.Night;
+
+        Debug.Log(dayState);
+
     }
 
     void LightOscilation()
     {
-        float t = (dayTime / dayLength) * 2 * Mathf.PI;
-        float lightFactor = (Mathf.Cos(t) + 1) / 2;
+        
 
-        dayLight.color = Color.Lerp(dayColorOffSetDark, dayColorOffSetBright, lightFactor);
+        float cyclePercent = dayTime / dayLength;
+        dayLight.color = dayGradient.Evaluate(cyclePercent);
 
-
-        // Ajustar os estados do dia para coincidir com a luz
-        if (lightFactor > 0.6f) // IluminaÁ„o forte -> manh„
-            dayState = DayState.Morning;
-        else if (lightFactor > 0.3f) // IluminaÁ„o mÈdia -> tarde
-            dayState = DayState.Afternoon;
-        else // IluminaÁ„o baixa -> noite
-            dayState = DayState.Night;
-
-        Debug.Log(dayState);
+        float minIntensity = 0.2f; // O m√≠nimo de brilho (deixe acima de 0 para evitar escurid√£o total)
+        float maxIntensity = 0.8f; // O brilho m√°ximo ao meio-dia
+        dayLight.intensity = Mathf.Lerp(minIntensity, maxIntensity, Mathf.Sin(cyclePercent * Mathf.PI));
     }
 }
