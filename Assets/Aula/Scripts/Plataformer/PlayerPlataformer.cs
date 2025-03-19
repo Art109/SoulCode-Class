@@ -14,6 +14,8 @@ public class PlayerPlataformer : MonoBehaviour
     [SerializeField] LayerMask floorLayer;
     bool isGrounded = true;
     float direction = 1;
+    [SerializeField] AudioSource passos;
+    [SerializeField] AudioSource swordSFX;
 
 
     // Start is called before the first frame update
@@ -34,7 +36,7 @@ public class PlayerPlataformer : MonoBehaviour
         IsGrounded();
         Jump();
         Flip();
-        
+        Attack();
     }
 
 
@@ -61,6 +63,22 @@ public class PlayerPlataformer : MonoBehaviour
 
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("isRunning", isRunning);
+
+        if ((isWalking || isRunning) && isGrounded)
+        {
+            if (!passos.isPlaying)
+            {
+                passos.Play();
+            }
+        }
+        else 
+        {
+            if (passos.isPlaying)
+            {
+                passos.Stop();
+            }
+        }
+
 
 
     }
@@ -95,6 +113,13 @@ public class PlayerPlataformer : MonoBehaviour
             transform.localScale = new Vector3(direction, transform.localScale.y, transform.localScale.z);
     }
 
- 
+    void Attack()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            animator.SetTrigger("Attack");
+            swordSFX.Play();
+        }
+    }
 
 }

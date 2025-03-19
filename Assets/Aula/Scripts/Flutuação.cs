@@ -13,12 +13,15 @@ public class Flutuação : MonoBehaviour
 
     bool lookingRight = true;
 
+    Animator animator;
+
     Vector3 direction;
     float tempo = 0f;
     // Start is called before the first frame update
     void Start()
     {
         direction = (pontoB.position - pontoA.position).normalized;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -50,5 +53,14 @@ public class Flutuação : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            animator.SetTrigger("Attack");
+        }
     }
 }
